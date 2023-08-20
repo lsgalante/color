@@ -12,6 +12,7 @@ Window {
 	id: main_window
 	title: "Mr. Pickies"
 
+	// color: Qt.hsla(0.1, 0.1, 0.1, 0.0)
 	color: "transparent"
 
 	width: 385
@@ -29,92 +30,162 @@ Window {
 	property var l: 0.30
 	property var prev_color: Qt.hsla(h, s, l, 1)
 
-	// mr_dragger
-	Canvas {
-        width:480
-        height:280
-		y: 0
+	// title
+	Rectangle {
+		id: title
+		color: Qt.hsla(0.5, 0.5, 0.5, 0.0)
+
+		width: 480
+		height: 280
+
 		x: -100
-		opacity: 0.5
+		y: 0
 
-        onPaint: {
-            let ctx = getContext("2d");
+		// title_dragger
+		Canvas {
+			id: title_dragger
+			anchors.fill: parent
 
-			ctx.strokeStyle = bg;
-			ctx.lineCap = "round";
-            ctx.lineWidth = 40;
-        	ctx.beginPath();
-			
-            let x = width / 2;
-            let y = height / 2;
-            let r = width / 4;
-            let startAngle = Math.PI * 1.3;
-            let endAngle = Math.PI * 1.7;
-            let counterclockwise = false;
+			onPaint: {
+				let ctx = getContext("2d");
 
-            ctx.arc(x, y, r, startAngle, endAngle, counterclockwise);
-            ctx.stroke();
-        }
-	
-		DragHandler { 
-			id: window_move
-			target: null
-			onActiveChanged: if (active) { main_window.startSystemMove(); }
+				ctx.strokeStyle = bg;
+				ctx.lineCap = "round";
+				ctx.lineWidth = 40;
+				ctx.beginPath();
+				
+				let x = width / 2;
+				let y = height / 2;
+				let r = width / 4;
+				let startAngle = Math.PI * 1.3;
+				let endAngle = Math.PI * 1.7;
+				let counterclockwise = false;
+
+				ctx.arc(x, y, r, startAngle, endAngle, counterclockwise);
+				ctx.stroke();
+			}
+
+			DragHandler { 
+				id: window_move
+				target: null
+				onActiveChanged: if (active) { main_window.startSystemMove(); }
+			}
+		}
+
+		// title_label
+		Canvas {
+			id: title_label
+			anchors.fill: parent
+
+			onPaint: {
+				let ctx = getContext("2d");
+
+				let letters = "Mr. Pickies";
+				ctx.font = "16px monospace";
+				ctx.fillStyle = txt;
+
+				ctx.translate(163, 40);
+				ctx.rotate(-0.55);
+
+				for(let i = 0; i < letters.length; i++) {
+					let letter = letters[i];
+					ctx.fillText(letter, 0, 0);
+
+					let len = ctx.measureText(letter);
+
+					ctx.translate(16, 0);
+					ctx.rotate(.12);
+				}
+			}
 		}
 	}
 
-	// title
-	Canvas {
-		anchors.fill: parent
-		opacity: 0.5
+	// options
+	Rectangle {
+		id: options_container
+		color: Qt.hsla(0.5, 0.5, 0.5, 0.0)
+		visible: false
 
-        onPaint: {
-            let ctx = getContext("2d");
+		width: 80
+		height: 50
 
-            let letters = "Mr. Pickies";
-            ctx.font = "16px monospace";
-		    ctx.fillStyle = txt;
+		anchors.horizontalCenter: circle.horizontalCenter
+		y: 240
 
-            ctx.translate(62, 43);
-            ctx.rotate(-0.58);
+		Rectangle {
+			id: options_bg
+			color: Qt.hsla(0.5, 0.5, 0.5, 0.0)
+			anchors.fill: parent
+			property var abg: "white"
 
-            for(let i = 0; i < letters.length; i++) {
-            	let letter = letters[i];
-			    ctx.fillText(letter, 0, 0);
+			Canvas {
+				id: options_bg_canvas
+				anchors.fill: parent;
 
-			  	let len = ctx.measureText(letter);
+				onPaint: {
+					let ctx = getContext("2d");
+					ctx.translate(0, -20);
 
-            	ctx.translate(16, 0);
-            	ctx.rotate(.12);
-            }
-        }
+					ctx.strokeStyle = bg;
+					ctx.lineCap = "round";
+					ctx.lineWidth = 40;
+					
+					let x = width / 2;
+					let y = height / 2;
+					let r = width / 4;
+					let startAngle = Math.PI * 0.4;
+					let endAngle = Math.PI * 2.6;
+					let counterclockwise = true;
+
+					ctx.beginPath();
+					ctx.arc(x, y, r, startAngle, endAngle, counterclockwise);
+					ctx.stroke();
+				}
+			}
+		}
+
+		Rectangle {
+			id: options_label
+			color: Qt.hsla(0.5, 0.5, 0.5, 0.0)
+
+			anchors.fill: parent
+
+			Canvas {
+				anchors.fill: parent;
+
+				onPaint: { 
+					let ctx = getContext("2d");
+					ctx.translate(32, 44);
+					
+					ctx.fillStyle = txt;
+					ctx.font = "32px monospace";
+
+					ctx.fillText("◉", 0, 0);
+				}
+			}
+		}
 	}
 
-	// select
-	Button {
-		id: sel_button
-		text: "Select"
-		onClicked: print('xxx')
+	// options_effect
+	MultiEffect {
+		id: options_effect
+		source: options_container
 
-		x: 40
-		y: 270
+		anchors.fill: options_container
 
-		width: 85
+		brightness: 0.0
+
+		MouseArea {
+			anchors.fill: parent
+			hoverEnabled: true
+			
+			onEntered: { options_effect.brightness = 0.1 }
+
+			onExited: { options_effect.brightness = 0.0 }
+		}
 	}
 
-	// cancel
-	Button {
-		id: can_button
-		text: "Cancel"
-		onClicked: Qt.quit()
-		anchors.left: sel_button.right
-		anchors.top: sel_button.top
-
-		anchors.leftMargin: 40
-		width: 85
-	}
-
-	// mr_circle
+	// circle_preview
 	Rectangle {
 		id: circle
 		color: prev_color
@@ -164,6 +235,77 @@ Window {
 		}
 	}
 
+	// // select
+	// Canvas {
+	// 	id: select
+	// 	width: 80
+	// 	height: 80
+
+	// 	x: 40
+	// 	y: 200
+
+	// 	onPaint: {
+	// 		let ctx = getContext("2d");
+	// 		ctx.strokeStyle = bg;
+	// 		ctx.lineCap = "round";
+    //         ctx.lineWidth = 40;
+    //     	ctx.beginPath();
+
+    //         let x = width / 2;
+    //         let y = height / 2;
+    //         let r = width / 4;
+    //         let startAngle = Math.PI * 0.7;
+    //         let endAngle = Math.PI * 2.3;
+    //         let counterclockwise = true;
+
+    //         ctx.arc(x, y, r, startAngle, endAngle, counterclockwise);
+    //         ctx.stroke();
+
+    //         ctx.font = "16px monospace";
+    //         ctx.fillStyle = txt;
+
+    //         let letters = "Select"
+
+    //         for(let i = 0; i < letters.length; i++) {
+    //         	let letter = letters[i];
+	// 		    ctx.fillText(letter, 0, 0);
+
+	// 		  	let len = ctx.measureText(letter);
+
+    //         	ctx.translate(16, 0);
+    //         	ctx.rotate(.12);
+    //         }
+	// 	}
+	// }
+
+	// // cancel
+	// Canvas {
+	// 	id: cancel
+	// 	width: 80
+	// 	height: 80
+
+	// 	x: 180
+	// 	y: 200
+
+	// 	onPaint: {
+	// 		let ctx = getContext("2d");
+	// 		ctx.strokeStyle = bg;
+	// 		ctx.lineCap = "round";
+    //         ctx.lineWidth = 40;
+    //     	ctx.beginPath();
+
+    //         let x = width / 2;
+    //         let y = height / 2;
+    //         let r = width / 4;
+    //         let startAngle = Math.PI * 0.7;
+    //         let endAngle = Math.PI * 2.3;
+    //         let counterclockwise = true;
+
+    //         ctx.arc(x, y, r, startAngle, endAngle, counterclockwise);
+    //         ctx.stroke();
+	// 	}
+	// }
+
 	// menu
 	Rectangle {
 		id: menu
@@ -173,118 +315,163 @@ Window {
 		height: 200
 
 		anchors.left: circle.right
-		anchors.leftMargin: 65
-		anchors.verticalCenter: circle.verticalCenter
+		anchors.leftMargin: 50
+		y: 25
 
+		// label_h
 		Text {
 			id: h_label
 			color: txt
 			text: "H"
 
-			x: 0
-			y:0
+			x: 6
+			y: 0
 		}
 
+		// label_s
 		Text {
 			id: s_label
 			color: txt
 
 			text: "S"
 
-			x: 15
+			anchors.horizontalCenter: menu.horizontalCenter
 			y: 0
 		}
 
+		// label_l
 		Text {
 			id: l_label
 			color: txt
 
 			text: "L"
 
-			x: 30
+			x: 37
 			y: 0
 		}
 
+		// slider_h
 		Slider {
 			id: h_slide
 			from: 0
 			to: 1
 			value: h
 
-			height: 150
+			height: 145
 			orientation: Qt.Vertical
 
-			x: 0
-			y: 30
+			x: 4
+			y: 20
 
 			onMoved: h = position
 		}
 
+		// slider_s
 		Slider {
 			id: s_slide
 			from: 0
 			to: 1
 			value: s
 
-			height: 150
+			height: 145
 			orientation: Qt.Vertical
 
-			x: 15
-			y: 30
+			anchors.horizontalCenter: menu.horizontalCenter
+			y: 20
 
 			onMoved: s = position
 		}
 
+		// slider_l
 		Slider {
 			id: l_slide
 			from: 0
 			to: 1
 			value: l
 
-			height: 150
+			height: 145
 			orientation: Qt.Vertical
 
-			x: 30
-			y: 30
+			x: 33
+			y: 20
 
 			onMoved: l = position
 		}
 
-		Text {
-			id: h_val
-			color: txt
+		// value_box
+		Rectangle {
+			id: value_box
+			color: Qt.hsla(0.1, 0.4, 0.3, 0.5)
+			radius: 7
+			visible: false
 
-			text: h.toFixed(2)
-			font.italic: true
+			width: 30
+			height: 50
 
-			x: 0
-			y: 190
+			x: 10
+			y: 165
 
-			rotation: 90
+			Text {
+				id: h_val
+				color: txt
+
+				text: h.toFixed(2)
+				font.italic: true
+
+				x: 3
+				y: 0
+			}
+
+			Text {
+				id: s_val
+				color: txt
+				font.italic: true
+
+				text: s.toFixed(2)
+
+				x: 3
+				y: 15
+			}
+
+			Text {
+				id: l_val
+				color: txt
+				font.italic: true
+
+				text: l.toFixed(2)
+
+				x: 3
+				y: 30
+			}
 		}
 
-		Text {
-			id: s_val
-			color: txt
-			font.italic: true
-
-			text: s.toFixed(2)
-
-			x: 15
-			y: 190
-
-			rotation: 90
+		TextEdit {
+			id: storage
+			visible: false
 		}
 
-		Text {
-			id: l_val
-			color: txt
-			font.italic: true
+		// value_box_effect
+		MultiEffect {
+			id: value_effect
+			anchors.fill: value_box
+			source: value_box
+			autoPaddingEnabled: true
 
-			text: l.toFixed(2)
+			MouseArea {
+				anchors.fill: parent
+				hoverEnabled: true
+				
+				onEntered: { value_effect.brightness = 0.1 }
 
-			x: 30
-			y: 190
+				onExited: { value_effect.brightness = 0.0 }
+
+				onClicked: {
+
+					storage.text = h.toFixed(2) + ", " + s.toFixed(2) + ", " + l.toFixed(2)
+					storage.selectAll()
+					storage.copy()
+				}
+			}
 
 			rotation: 90
 		}

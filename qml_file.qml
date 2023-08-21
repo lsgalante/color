@@ -5,6 +5,7 @@ import QtQuick.Effects
 import QtQuick.Shapes
 import QtQuick.Window
 
+import io.qt.textproperties
 import Qt5Compat.GraphicalEffects
 
 Window {
@@ -25,10 +26,15 @@ Window {
 	property var bg: Qt.hsla(0.00, 0.00, 0.16, 0.8)
 	property var txt: Qt.hsla(0.1, 0.1, 0.8, 1.0)
 
-	property var h: 0.10
+	// property var h: 0.10
+	property var h: bridge.test_def(0.0)
 	property var s: 0.00
 	property var l: 0.30
 	property var prev_color: Qt.hsla(h, s, l, 1)
+
+	Bridge {
+		id: bridge
+	}
 
 	// title
 	Rectangle {

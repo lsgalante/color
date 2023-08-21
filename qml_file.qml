@@ -11,7 +11,7 @@ import Qt5Compat.GraphicalEffects
 Window {
 
 	id: main_window
-	title: "Mr. Pickies"
+	title: "Please Colors"
 
 	// color: Qt.hsla(0.1, 0.1, 0.1, 0.0)
 	color: "transparent"
@@ -26,10 +26,10 @@ Window {
 	property var bg: Qt.hsla(0.00, 0.00, 0.16, 0.8)
 	property var txt: Qt.hsla(0.1, 0.1, 0.8, 1.0)
 
-	// property var h: 0.10d
-	property var h: bridge.test_def(0.0)
-	property var s: 0.00
-	property var l: 0.30
+	// property var h: 0.10
+	property var h: bridge.start_h(0.0)
+	property var s: bridge.start_s(0.0)
+	property var l: bridge.start_l(0.0)
 	property var prev_color: Qt.hsla(h, s, l, 1)
 
 	Bridge {
@@ -86,7 +86,7 @@ Window {
 			onPaint: {
 				let ctx = getContext("2d");
 
-				let letters = "Mr. Pickies";
+				let letters = "Please Colors";
 				ctx.font = "16px monospace";
 				ctx.fillStyle = txt;
 
@@ -188,6 +188,8 @@ Window {
 			onEntered: { options_effect.brightness = 0.1 }
 
 			onExited: { options_effect.brightness = 0.0 }
+
+			onClicked: { main_window.close() }
 		}
 	}
 
@@ -425,7 +427,7 @@ Window {
 				font.italic: true
 
 				x: 3
-				y: 0
+				y: 30
 			}
 
 			Text {
@@ -447,7 +449,7 @@ Window {
 				text: l.toFixed(2)
 
 				x: 3
-				y: 30
+				y: 0
 			}
 		}
 

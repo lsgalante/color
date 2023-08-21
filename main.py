@@ -8,12 +8,32 @@ from PySide6.QtQml import QQmlApplicationEngine, QmlElement
 QML_IMPORT_NAME = "io.qt.textproperties"
 QML_IMPORT_MAJOR_VERSION = 1
 
+args = sys.argv
+start_vals = [0.5, 0.5, 0.5]
+
+if len(args) > 1:
+	start_vals = [args[1].lstrip('-'), args[2].lstrip('-'), args[3].lstrip('-')]
+
+print(start_vals)
+
 @QmlElement
 class Bridge(QObject):
 
 	@Slot(float, result = float)
-	def test_def(self, x):
-		return(0.80)
+	def start_h(self, x):
+		val = start_vals[0]
+		print(val)
+		return(float(val))
+
+	@Slot(float, result = float)
+	def start_s(self, x):
+		val = start_vals[1]
+		return(float(val))
+
+	@Slot(float, result = float)
+	def start_l(self, x):
+		val = start_vals[2]
+		return(float(val))
 
 if __name__ == '__main__':
 	app = QGuiApplication(sys.argv)

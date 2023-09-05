@@ -11,19 +11,17 @@ l = 0.75
 
 args = sys.argv
 
-# mode 0: regular mode
-# mode 1: sublime plugin mode
-mode = 0
-
-if len(args) == 3 and args[1] == '-s':
-	mode = 1
-
-if mode == 1:
-	vals = eval(args[2])
-
+try:
+	data = eval(args[1])
+	vals = data[1]
+	
 	h = vals[0] / 360
 	s = vals[1] / 100
 	l = vals[2] / 100
+
+except:
+	x = 1
+
 
 QML_IMPORT_NAME = "io.qt.textproperties"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -42,23 +40,10 @@ class Bridge(QObject):
 	@Slot(result=float)
 	def init_l(self):
 		return(l)
-
-	@Slot(float)
-	def set_h(self, a):
-		print(a * 360)
-
-	@Slot(float)
-	def set_s(self, a):
-		print(a * 100)
-
-	@Slot(float)
-	def set_l(self, a):
-		print(a * 100)
-
-	@Slot(float, float, float, result = float)
-	def test(self, h, s, l):
-		return('')
-
+		
+	@Slot(float, float, float)
+	def return_hsl(self, h, s, l):
+		print([h * 360, s * 100, l * 100])
 
 if __name__ == '__main__':
 	app = QGuiApplication(sys.argv)

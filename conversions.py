@@ -1,19 +1,19 @@
 import colorsys
 
-def hsl_to_rgb(h, s, l):
-	rgb = colorsys.hls_to_rgb(h, l, s)
+def hsl_rgb(h, s, l):
+	rgb = colorsys.hls_rgb(h, l, s)
 	r = rgb[0]
 	g = rgb[1]
 	b = rgb[2]
-	r, g, b = fit_up_rgb(r, g, b)
+	r, g, b = rgb_up(r, g, b)
 	return (r, g, b)
 
-def hsl_to_rgb_hex(h, s, l):
-	r, g, b = hsl_to_rgb(h, s, l)
-	hex_r, hex_g, hex_b = rgb_to_rgb_hex(r, g, b)
+def hsl_rgbhex(h, s, l):
+	r, g, b = hsl_rgb(h, s, l)
+	hex_r, hex_g, hex_b = rgb_rgbhex(r, g, b)
 	return(hex_r, hex_g, hex_b)
 
-def hsv_to_rgb(h, s, v):
+def hsv_rgb(h, s, v):
      # h -> [0, 360]
      # s -> [0, 100]
      # l -> [0, 100]
@@ -26,7 +26,7 @@ def hsv_to_rgb(h, s, v):
      # return int(RR * 255), int(GG * 255), int(BB * 255)
      return('x')
 
-def hwb_to_rgb(h, w, b):
+def hwb_rgb(h, w, b):
 	# h -> [0, 360)
 	# w -> [0, 100]
 	# b -> [0, 100]
@@ -46,7 +46,7 @@ def hwb_to_rgb(h, w, b):
 	# return r, g, b
 	return('x')
 
-def lab_to_rgb(L, a, b):
+def lab_rgb(L, a, b):
 	# L -> [0, 100]
 	# a -> [-160, 160]
 	# b -> [-160, 160]
@@ -85,7 +85,7 @@ def lab_to_rgb(L, a, b):
 	# return r, g, b
 	return('x')
 
-def lch_to_lab(L, c, h):
+def lch_lab(L, c, h):
 	# L -> [0, 100]
 	# c -> [0, 230]`	 
 	# h -> [0, 360)
@@ -94,12 +94,12 @@ def lch_to_lab(L, c, h):
 	# return L, a, b
 	return(x)
 
-def lch_to_rgb(L, c, h):
+def lch_rgb(L, c, h):
 	# L, a, b = lchb_to_lab(L, c, h)
 	# return lab_to_rgb(L, a, b)
 	return('x')
 
-def rgba_to_rgba_hex(r, g, b, a):
+def rgba_rgbahex(r, g, b, a):
 	if g is not None and b is not None:	
 		sr = '%X' % rb
 
@@ -127,24 +127,24 @@ def rgba_to_rgba_hex(r, g, b, a):
 	
 	return '#%s%s%s%s' % (sr, sg, sb, sa)
 
-def rgb_hex_to_hsl(r_hex, g_hex, b_hex):
-	r, g, b = rgb_hex_to_rgb(r_hex, g_hex, b_hex)
-	r, g, b = fit_down_rgb(r, g, b)
-	h, s, l = rgb_to_hsl(r, g, b)
+def rgbhex_hsl(r_hex, g_hex, b_hex):
+	r, g, b = rgbhex_rgb(r_hex, g_hex, b_hex)
+	r, g, b = rgb_down(r, g, b)
+	h, s, l = rgb_hsl(r, g, b)
 	return(h, s, l)
 
-def rgb_hex_to_rgb(r_hex, g_hex, b_hex):
+def rgbhex_rgb(r_hex, g_hex, b_hex):
 	r = int(r_hex, 16)
 	g = int(g_hex, 16)
 	b = int(b_hex, 16)
 	return(r, g, b)
 
-def rgb_to_hsl(r, g, b):
-	hls = colorsys.rgb_to_hls(r, g, b)
+def rgb_hsl(r, g, b):
+	hls = colorsys.rgb_hls(r, g, b)
 	h, s, l = round(hls[0], 4), round(hls[2], 4), round(hls[1], 4)
 	return(h, s, l)
 
-def rgb_to_rgb_hex(r, g, b):
+def rgb_rgbhex(r, g, b):
 	r = int(round(r, 0))
 	g = int(round(g, 0))
 	b = int(round(b, 0))
@@ -156,25 +156,25 @@ def rgb_to_rgb_hex(r, g, b):
 	hex_b = hex_b[2] + hex_b[3]
 	return(hex_r, hex_g, hex_b)
 
-def fit_down_hsl(h, s, l):
+def hsl_down(h, s, l):
 	h = round(h / 360, 4)
 	s = round(s / 100, 4)
 	l = round(l / 100, 4)
 	return(h, s, l)
 
-def fit_up_hsl(h, s, l):
+def  hsl_up(h, s, l):
 	h = round(h * 360, 2)
 	s = round(s * 100, 2)
 	l = round(l * 100, 2)
 	return(h, s, l)
 
-def fit_down_rgb(r, g, b):
+def rgb_down(r, g, b):
 	r = round(r / 255, 4)
 	g = round(g / 255, 4)
 	b = round(b / 255, 4)
 	return(r, g, b)
 
-def fit_up_rgb(r, g, b):
+def  rgb_up(r, g, b):
 	r = round(r * 255, 2)
 	g = round(g * 255, 2)
 	b = round(b * 255, 2)

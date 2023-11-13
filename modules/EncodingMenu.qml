@@ -1,86 +1,38 @@
 import QtQuick
 import QtQuick.Window
 
-Rectangle {
+Rectangle
+{
 	id: root
 	height: 31; width: 35
-	color: "black"
-	anchors.bottom: tray.top
+	anchors.bottom: parent.bottom
+	anchors.bottomMargin: 40
 	anchors.right: tray.right
+	color: Qt.hsla(0, 0, 0.5, 1)
+	visible: false
 
-	property var mode: "hsl"
-
-	Column {
-		id: entries_column
+	Column
+	{
+		id: encodings
 		anchors.fill: parent
 		spacing: 1
-
-		Rectangle {
-			id: hsl_entry
-			y: 0
-			height: 15; width: 35
-			color: "lightgray"
-
-			Text {
-				text: "hsl"
-				x: 5
-
-				MouseArea {
-					anchors.fill: parent
-
-					onClicked: {
-						mode = "hsl"
-					}
-				}
-
-				Connections {
-					target: root
-
-					function onModeChanged() {
-						if(mode == "hsl") {
-							hsl_entry.color = "lightgray";
-						}
-
-						else {
-							hsl_entry.color = "gray"
-						}
-					}
-				}
-			}
+		
+		EncodingMenuEntry
+		{
+			id: rgb_entry
+			type: "rgb"
 		}
 
-		Rectangle {
-			id: rgb_entry
-			y: 15
-			height: 15; width: 35
-			color: "gray"
+		EncodingMenuEntry
+		{
+			id: hex_entry
+			type: "hex"
+		}
 
-			Text {
-				text: "rgb"
-				x: 5
-
-				MouseArea {
-					anchors.fill: parent
-
-					onClicked: {
-						mode = "rgb"
-					}
-				}
-
-				Connections {
-					target: root
-
-					function onModeChanged() {
-						if(mode == "rgb") {
-							rgb_entry.color = "lightgray";
-						}
-
-						else {
-							rgb_entry.color = "gray"
-						}
-					}
-				}
-			}
+		EncodingMenuEntry
+		{
+			id: hsl_entry
+			type: "hsl"
 		}
 	}
 }

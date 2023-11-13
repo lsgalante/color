@@ -4,114 +4,67 @@ import "modules"
 
 import io.qt.textproperties 1.0
 
-
-Window {
-	id: w1
-	height: 215; width: 200
-	visible: true
+Window
+{
+	id: main_window
+	height: 220; width: 200
+	x: Screen.width - width - 30; y: 50
 	color: "black"
+	visible: true
 
-	property var val_a: (1.00 - sled_a.pos).toFixed(2)
-	property var val_b: (1.00 - sled_b.pos).toFixed(2)
-	property var val_c: (1.00 - sled_c.pos).toFixed(2)
+	property var mode: "rgb"
+	property var pos_a: (1.00 - controls.pos_a).toFixed(2)
+	property var pos_b: (1.00 - controls.pos_b).toFixed(2)
+	property var pos_c: (1.00 - controls.pos_c).toFixed(2)
+	property var alpha: 1
 
-	property var vals: [val_a, val_b, val_c]
-
-	property var mode: menu.mode
-
-	property var prev_hsla: Qt.hsla(val_a, val_b, val_c, 1.00)
-	property var prev_rgba: Qt.rgba(val_a, val_b, val_c, 1.00)
-
-	Bridge {
+	Bridge
+	{
 		id: bridge
 	}
 
-	Rectangle {
+	property var rgb:
+	{
+		if (mode == "rgb")
+			return [pos_a, pos_b, pos_c]
+
+		if (mode == "hsl")
+			var _rgb = bridge.hsl_to_rgb(pos_a, pos_b, pos_c)
+			return [_rgb[0].toFixed(2), _rgb[1].toFixed(2), _rgb[2].toFixed(2)]
+	}
+
+	property var hsl:
+	{
+		if (mode == "hsl")
+			return [pos_a, pos_b, pos_c]
+
+		if (mode == "rgb")
+			var _hsl = bridge.rgb_to_hsl(pos_a, pos_b, pos_c)
+			return [_hsl[0].toFixed(2), _hsl[1].toFixed(2), _hsl[2].toFixed(2)]
+	}
+
+	property var prev_rgba: Qt.rgba(rgb[0], rgb[1], rgb[2], 1.00)
+	property var prev_hsla: Qt.hsla(hsl[0], hsl[1], hsl[2], 1.00)
+	property var dropown_state: 0
+
+	Preview
+	{
 		id: preview
-		height: 200; width: 200
-		color: prev_hsla
-
-		Connections {
-			target: w1
-
-			function onModeChanged() {
-				update()
-			}
-
-			function onValsChanged() {
-				update()
-			}
-
-			function update() {
-				if(mode == "hsl") {
-					preview.color = prev_hsla
-				}
-
-				else if(mode == "rgb") {
-					preview.color = prev_rgba
-				}
-			}
-		}
 	}
-
-	Rectangle {
+	Tray
+	{
 		id: tray
-		width: 200; height: 20
-		y: 200
-		color: Qt.hsla(0.30, 0.30, 0.20, 1.00)
-
-		Values {
-			anchors.horizontalCenter: parent.horizontalCenter
-		}
-
-
-		Text {
-			id: encoding_label
-			anchors.right: parent.right
-			anchors.rightMargin: 5
-			text: mode
-			color: "gray"
-
-			MouseArea {
-				anchors.fill: parent
-
-				onClicked: {
-					if(menu.visible == false) {
-						menu.visible = true
-					}
-
-					else {
-						menu.visible = false
-					}
-				}
-			}
-		}
 	}
-
-	EncodingMenu {
-		id: menu
-		visible: false
+	Dropown
+	{
+		id: dropown
 	}
-
-	Window {
-		id: w2
-		height: 350; width: 47
-		visible: true
-		color: "gray"
-		x: Screen.width - width * 1.1
-		y: Screen.height / 2 - height / 2
-
-		Row {
-			spacing: 1
-			Sled {
-				id: sled_a
-			}
-			Sled {
-				id: sled_b
-			}
-			Sled {
-				id: sled_c
-			}
-		}
+	EncodingMenu
+	{
+		id: encoding_menu
+	}
+	Controls
+	{
+		id: controls
 	}
 }

@@ -1,13 +1,15 @@
 import QtQuick
 
-Rectangle {
+Rectangle
+{
 	id: track
-	width: 15; height: 350
+	height: 350; width: 20
 	color: "black"
 
 	property var pos: sled.y / (height - sled.height)
 
-	MouseArea {
+	MouseArea
+	{
 		anchors.fill: parent
 		drag.target: sled
 		drag.axis: Drag.YAxis
@@ -15,7 +17,8 @@ Rectangle {
 		drag.maximumY: parent.height - sled.height
 	}
 
-	Rectangle {
+	Rectangle
+	{
 		id: sled
 		height: 6; width: parent.width
 		y: track.height - height

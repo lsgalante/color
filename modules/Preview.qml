@@ -3,15 +3,13 @@ import QtQuick
 Rectangle
 {
 	id: root
-	height: 200; width: 200
+
 	color:
 	{
-		if (mode == "rgb")
-			return Qt.rgba(rgb[0], rgb[1], rgb[2], 1)
-
-		if (mode == "hsl")
-			return Qt.hsla(hsl[0], hsl[1], hsl[2], 1)
+		if(master_encoding == "rgb") { return Qt.rgba(master_vals[0], master_vals[1], master_vals[2], 1) }
+		if(master_encoding == "hsl") { return Qt.hsla(master_vals[0], master_vals[1], master_vals[2], 1) }
 	}
+	height: 200; width: 200
 
 	MouseArea
 	{

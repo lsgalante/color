@@ -1,1 +1,1 @@
-A variety of functions for working with colors while computing.
+WM Overlay for color indexing & information.

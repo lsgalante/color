@@ -1,41 +1,57 @@
 import QtQuick
 import QtQuick.Window
 import "modules"
-
 import io.qt.textproperties 1.0
 
-Window
-{
-	id: main_window
+Window {
 
-	// property var master_vals: bridge.readMasterVals()
-	property var master_vals: [0, 0, 0]
-	property var master_alpha: 1
+	id          : main_window
+	visible     : true
+	color       : "black"
+	height      : 200
+	width       : 200
+	x: Screen.width - sled_window.width - width - 35
+	y: Screen.height - height * 3.2
 
-	property var master_sled_pos: bridge.valToSledPos(master_vals, 350)
+	property var readouts       : []
+	property var encoding_main  : ''
+	property var colorSpace_main: ''
+	property var chVals_main    : [0, 0, 0]
+	property var sledPstns_main : [0, 0, 0]
+	
+	Component.onCompleted: {
 
-	property var master_min_vals: [0.00, 0.00, 0.00]
-	property var master_max_vals: [1.00, 1.00, 1.00]
-	property var master_readout: bridge.concat(master_vals)
-	property var master_decimal_places: [2, 2, 2]
+		bridge.setReadoutsMain()
+		readouts = bridge.readReadoutsMain()
+		encoding_main = bridge.readEncodingMain()
+		colorSpace_main = bridge.readColorSpaceMain()
 
-	property var master_encoding: "rgb"
-	property var master_token: "rgb_lo"
+		sledPstns_main = bridge.chValsToSledPstns(chVals_main, 350)
+	}
 
-	property var dropdown_state: 1
+	onClosing: {
 
-	visible: true
-	color: "black"
-	height: 200; width: 200
-	x: Screen.width - width - 30; y: 50
+		bridge.writeState();
+		print('Goodbye');
+	}
 
-	Bridge { id: bridge }
+	Bridge {
 
-	Preview { id: preview }
+		id: bridge
+	}
 
-	// Tray { id: tray }
+	Preview {
 
-	Dropdown { id: dropown }
+		id: preview
+	}
 
-	Controls { id: controls }
+	ReadoutWindow {
+
+		id: readout_window
+	}
+
+	SledWindow {
+
+		id: sled_window
+	}
 }

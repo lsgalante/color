@@ -1,23 +1,20 @@
 import QtQuick
 
 Rectangle {
-	id    : root
+	id:     root
 	height: 200
-	width : 200
-	color : {
-		var colorSpace_main = bridge.readColorSpaceMain()
+	width:  200
+	color:  {
+		var main_colorspace = bridge.get_main_colorspace()
 
-		if(colorSpace_main == "rgb") {
-			return Qt.rgba(chVals_main[0], chVals_main[1], chVals_main[2], 1)
+		if(main_colorspace == "rgb") {
+			return Qt.rgba(main_ch_val_arr[0], main_ch_val_arr[1], main_ch_val_arr[2], 1)
 		}
-
-		if(colorSpace_main == "hsl") {
-			return Qt.hsla(chVals_main[0], chVals_main[1], chVals_main[2], 1)
+		if(main_colorspace == "hsl") {
+			return Qt.hsla(main_ch_val_arr[0], main_ch_val_arr[1], main_ch_val_arr[2], 1)
 		}
 	}
-
-
-	MouseArea {	
+	MouseArea {
 		anchors.fill: parent
 	}
 }

@@ -1,165 +1,144 @@
 import colorsys
 import re
 
-def get_readouts(colorSpace_in, chVals_in, encodings):
-	readouts = []
+def get_readouts(colorspace_in, ch_val_arr_in, encoding_arr):
+	readout_arr = []
 
-	chVals_rgb = [0.00, 0.00, 0.00]
-	chVals_hsl = [0.00, 0.00, 0.00]
+	ch_val_arr_rgb = [0.00, 0.00, 0.00]
+	ch_val_arr_hsl = [0.00, 0.00, 0.00]
 
-	if colorSpace_in == 'rgb' or colorSpace_in == 'hex':
-		chVals_rgb = chVals_in
-		chVals_hsl = rgb_to_hsl(chVals_in)
+	if colorspace_in == "rgb" or colorspace_in == "hex":
+		ch_val_arr_rgb = ch_val_arr_in
+		ch_val_arr_hsl = rgb_to_hsl(ch_val_arr_in)
 
-	elif colorSpace_in == 'hsl':
-		chVals_rgb = hsl_to_rgb(chVals_in)
-		chVals_hsl = chVals_in
-	
-	for encoding in encodings:
+	elif colorspace_in == "hsl":
+		ch_val_arr_rgb = hsl_to_rgb(ch_val_arr_in)
+		ch_val_arr_hsl = ch_val_arr_in
 
-		name = encoding['name']
-		colorSpace_out = encoding['colorSpace']
-		limit_min = encoding['limit_min']
-		limit_max = encoding['limit_max']
+	for encoding in encoding_arr:
+		name = encoding["name"]
+		colorspace_out = encoding["colorspace"]
+		limit_min = encoding["limit_min"]
+		limit_max = encoding["limit_max"]
 
-		chVals_out = []
-		encodingVals = []
+		ch_val_arr_out = []
+		encoding_val_arr = []
 
-		if colorSpace_out == 'rgb':
-			chVals_out = chVals_rgb
+		if colorspace_out == "rgb":
+			ch_val_arr_out = ch_val_arr_rgb
+		elif colorspace_out == "hsl":
+			ch_val_arr_out = ch_val_arr_hsl
+		elif colorspace_out == "hex":
+			ch_val_arr_out = ch_val_arr_rgb
 
-		elif colorSpace_out == 'hsl':
-			chVals_out = chVals_hsl
+		ch_val_arr_out = [round(ch_val_arr_out[0], 2), round(ch_val_arr_out[1], 2), round(ch_val_arr_out[2], 2)]
+		encoding_val_arr = fit_val_arr(ch_val_arr_out, limit_min, limit_max)
 
-		elif colorSpace_out == 'hex':
-			chVals_out = chVals_rgb
-
-
-		chVals_out = [round(chVals_out[0], 2), round(chVals_out[1], 2), round(chVals_out[2], 2)]
-		encodingVals = fit_vals(chVals_out, limit_min, limit_max)
-
-		if colorSpace_out != 'hex':
-			displayVal = get_displayVal(encodingVals, limit_min)
+		if colorspace_out != "hex":
+			display_val = get_display_val(encoding_val_arr, limit_min)
 
 		else:
-			print(chVals_out)
-			print(encodingVals)
-			displayVal = rgb_to_hex(encodingVals)
-			print(displayVal)
-			print('-')
+			print(ch_val_arr_out)
+			print(encoding_val_arr)
+			display_val = rgb_to_hex(encoding_val_arr)
+			print(display_val)
+			print("-")
 
 
 		readout = {
-			'colorSpace'  : colorSpace_out,
-			'encoding'    : name,
-			'chVals'      : chVals_out,
-			'encodingVals': encodingVals,
-			'displayVal'  : displayVal
+			"colorspace"  : colorspace_out,
+			"encoding"    : name,
+			"ch_val_arr"      : ch_val_arr_out,
+			"encoding_val_arr": encoding_val_arr,
+			"display_val"  : display_val
 		}
 
-		readouts.append(readout)
+		readout_arr.append(readout)
 
-	return readouts
+	return readout_arr
 
 
 def rgb_to_hsl(rgb):
-
 	hls = colorsys.rgb_to_hls(rgb[0], rgb[1], rgb[2])
 	hsl = [hls[0], hls[2], hls[1]]
 	return hsl
 
-
 def rgb_to_hex(rgb):
-
 	hex_color = ''
 	ct = 0
 	for val in rgb:
 		# hex_val = round(val * 255, 0)
 		hex_val = str(hex(int(val)))
-		hex_val = hex_val.lstrip('0x')
+		hex_val = hex_val.lstrip("0x")
 		if len(hex_val) == 1:
-			hex_val = '0' + hex_val
+			hex_val = "0" + hex_val
 		elif len(hex_val) == 0:
-			hex_val = '00'
+			hex_val = "00"
 		hex_color += hex_val
 		ct +=1
-
-	hex_color = '#' + hex_color
+	hex_color = "#" + hex_color
 	return hex_color
 
-
 def hsl_to_rgb(hsl):
-
 	rgb = colorsys.hls_to_rgb(hsl[0], hsl[2], hsl[1])
 	return rgb
 
-
 def hsl_to_hex(hsl):
-
 	rgb = hsl_to_rgb(hsl)
 	hex_color = rgb_to_hex(rgb)
 	return(hex_color)
 
-
-def fit_vals(vals, limit_min, limit_max):
-
-	vals_out = []
+def fit_val_arr(val_arr, limit_min, limit_max):
+	val_arr_out = []
 	ct = 0
-	for val in vals:
+	for val in val_arr:
 		fit_range = float(limit_max[ct]) - float(limit_min[ct])
 		val_fit = (((val - 0) * fit_range) / 1) + float(limit_min[ct])
-		vals_out.append(val_fit)
+		val_arr_out.append(val_fit)
 		ct += 1
+	return val_arr_out
 
-	return vals_out
-
-def get_displayVal(chVals, limit_min):
-
-	displayVal = ''
-
+def get_display_val(ch_val_arr, limit_min):
+	display_val = ""
 	ct = 0
-	for chVal in chVals:
-		val = ''
-		split = re.split(r'\.', limit_min[ct])
+	for ch_val in ch_val_arr:
+		val = ""
+		split = re.split(r"\.", limit_min[ct])
 		place_ct = 0
 
 		if len(split) > 1:
 			place_ct = len(split[1])
-			val = round(chVal, place_ct)
+			val = round(ch_val, place_ct)
 			val = str(val)
-			split = re.split(r'\.', val)
+			split = re.split(r"\.", val)
 
 			if len(split[1]) != place_ct:
 				missing = place_ct - len(split[1])
 
 				for place in range(missing):
-					val += '0'
+					val += "0"
 			ct += 1
 
 		else:
-			val = re.split(r'\.', str(chVal))[0]
+			val = re.split(r"\.", str(ch_val))[0]
 
-		displayVal += val + ' '
+		display_val += val + " "
 
-	displayVal = displayVal.rstrip(' ')
-	return displayVal
+	display_val = display_val.rstrip(" ")
+	return display_val
 
+def sled_p_to_ch_val(sled_p, ch_h):
+	sled_h = 6
+	ch_val = ch_h - sled_h - sled_p
+	ch_val /= ch_h - sled_h
+	return ch_val
 
-def sledPos_to_chVal(sledPos, chHeight):
+def ch_val_to_sled_p(ch_val_arr, ch_h):
+	sled_h = 6
+	p_arr = []
+	for val in ch_val_arr:
+		sled_p = val * (ch_h - sled_h)
+		sled_p = ch_h - sled_h - sled_p
+		p_arr.append(sled_p)
 
-	sledHeight = 6
-	chVal = chHeight - sledHeight - sledPos
-	chVal /= chHeight - sledHeight
-	return chVal
-
-
-def chVal_to_sledPos(chVals, chHeight):
-
-	sledHeight = 6
-	pos_list = []
-	for val in chVals:
-		sledPos = val * (chHeight - sledHeight)
-		sledPos = chHeight - sledHeight - sledPos
-		poss.append(sledPos)
-
-	return pos_list
+	return p_arr

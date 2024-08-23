@@ -1,9 +1,8 @@
 import colorsys
 import re
 
-def get_readouts(colorspace_in, ch_val_arr_in, encoding_arr):
+def get_readout_arr(colorspace_in, ch_val_arr_in, encoding_arr):
 	readout_arr = []
-
 	ch_val_arr_rgb = [0.00, 0.00, 0.00]
 	ch_val_arr_hsl = [0.00, 0.00, 0.00]
 
@@ -46,17 +45,14 @@ def get_readouts(colorspace_in, ch_val_arr_in, encoding_arr):
 
 
 		readout = {
-			"colorspace"  : colorspace_out,
-			"encoding"    : name,
-			"ch_val_arr"      : ch_val_arr_out,
+			"colorspace": colorspace_out,
+			"encoding": name,
+			"ch_val_arr": ch_val_arr_out,
 			"encoding_val_arr": encoding_val_arr,
-			"display_val"  : display_val
+			"display_val": display_val
 		}
-
 		readout_arr.append(readout)
-
 	return readout_arr
-
 
 def rgb_to_hsl(rgb):
 	hls = colorsys.rgb_to_hls(rgb[0], rgb[1], rgb[2])

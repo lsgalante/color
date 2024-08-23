@@ -1,45 +1,54 @@
 import QtQuick
 import QtQuick.Window
-import "modules"
+import QtQml
 import io.qt.textproperties 1.0
+import "./color_modules"
 
 Window {
+    color: "blue"
+    flags: Qt.FramelessWindowHint
+    height: 200; width: 200
+	id: root
+	visible: true
+	x: Screen.width - 400 - 10; y: Screen.height - 200 - 25
 
-	id          : main_window
-	visible     : true
-	color       : "black"
-	height      : 200
-	width       : 200
-	x: Screen.width - sled_window.width - width - 35
-	y: Screen.height - height * 3.2
+	Bridge { id: bridge }
+	// ColorContainer { id: color_container }
+	ColorWindowSettings { id: setting_window }
+    ColorWindowControls {}
+    onClosing: { print("Exiting"); }
 
-	property var readout_arr:     []
-	property var main_encoding:   ''
-	property var main_colorspace: ''
-	property var main_ch_val_arr: [0, 0, 0]
-	property var main_sled_p_arr: [0, 0, 0]
-
-	Component.onCompleted: {
-		bridge.set_main_readout_arr()
-		readout_arr =     bridge.get_main_readout_arr()
-		main_encoding =   bridge.get_main_encoding()
-		main_colorspace = bridge.get_main_colorspace()
-		main_sled_p_arr = bridge.ch_val_arr_to_sled_p_arr(main_ch_val_arr, 350)
-	}
-	onClosing: {
-		bridge.write_state();
-		print('Exiting');
-	}
-	Bridge {
-		id: bridge
-	}
-	Preview {
-		id: preview
-	}
-	ReadoutWindow {
-		id: readout_window
-	}
-	SledWindow {
-		id: sled_window
-	}
+	property var state: {
+        "map": "rgb_lo",
+        "val_arr": [0, 0, 0],
+        "p_arr": [0, 0, 0],
+        "label": "label"
+    }
+    property var maps: {
+        "rgb_lo": {
+            "encoding": "rgb",
+            "min": [0.00, 0.00, 0.00],
+            "max": [1.00, 1.00, 1.00]
+        },
+        "rgb_hi": {
+            "encoding": "rgb",
+            "min": [0, 0, 0],
+            "max": [255, 255, 255]
+        },
+        "hsl_lo": {
+            "encoding": "hsl",
+            "min": [0.00, 0.00, 0.00],
+            "max": [1.00, 1.00, 1.00]
+        },
+        "hsl_hi": {
+            "encoding": "hsl",
+            "min": [0, 0, 0],
+            "max": [360, 100, 100]
+        },
+        "hex": {
+            "encoding": "hex",
+            "min": [0, 0, 0],
+            "max": [255, 255, 255]
+        }
+    }
 }

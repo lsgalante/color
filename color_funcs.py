@@ -1,3 +1,5 @@
+# color_funcs.py
+
 import colorsys
 import re
 

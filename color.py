@@ -78,6 +78,6 @@ if __name__ == "__main__":
 
 	engine = QQmlApplicationEngine()
 	engine.quit.connect(app.quit)
-	engine.load("Main.qml")
+	engine.load("/home/lucas/src/color/Main.qml")
 
 	sys.exit(app.exec())

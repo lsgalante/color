@@ -13,7 +13,8 @@ Window {
     color: "blue"
     height: 200; width: 200
     x: 400; y: Screen.height - 200 - 25
-    property string settings_tab_active: "tab_color_format"
+    property string settings_tab: "format"
+    property string format_active: "rgb"
     property var ch0: 0.6
     property var ch1: 0.5
     property var ch2: 0.4
@@ -29,7 +30,7 @@ Window {
         visible: true
         height: 200; width: 300
         ColorControls { 
-            height: parent.height; width: 100
+            height: test.height; width: 100
         }
         Rectangle {
             color: "black"

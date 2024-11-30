@@ -8,62 +8,66 @@ Column {
     anchors.fill: parent
 
     Rectangle {
-        id: settings_tab_bar
+        id: tabbar
         height: 20; width: parent.width
         Row {
             anchors.fill: parent
 
             Rectangle {
-                id: tab_color_format
+                id: tab_format
                 height: parent.height; width: parent.width / 2
-                color: {
-                    if (settings_tab_active == "tab_color_format")
-                        return "gray";
-                    else
-                        return "white";
-                }
+                color: "black";
                 Text {
                     anchors.centerIn: parent
-                    text: "color_format"
+                    color: "white"
+                    text: {
+                        if (settings_tab == "format") {return "[ format ]";}
+                        else {return "format";}
+                    }
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: settings_tab_active = "tab_color_format"
+                    onClicked: settings_tab = "format"
                 }
             }
 
             Rectangle {
                 id: tab_window
                 height: parent.height; width: parent.width / 2
-                color: {
-                    if (settings_tab_active == "tab_window")
-                        return "gray";
-                    else
-                        return "white";
-                }
+                color: "black"
                 Text {
                     anchors.centerIn: parent
-                    text: "window"    
+                    color: "white"
+                    text: {
+                        if (settings_tab == "window") {return "[ window ]";}
+                        else {return "window";}
+                    }
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: settings_tab_active = "tab_window"
+                    onClicked: settings_tab = "window"
                 }
             }
         }
     }
+
+    Rectangle {
+        id: divider
+        color: "blue"
+        height: 2; width: parent.width
+    }
     
     Rectangle {
-        height: parent.height - settings_tab_bar.height; width: parent.width    
+        height: parent.height - tabbar.height; width: parent.width    
 
         ColorFormatContainer {
           id: page_color_format
-          visible: settings_tab_active == "tab_color_format"
+          visible: settings_tab == "format"
         }
 
         Rectangle {
             id: page_window
-            visible: settings_tab_active == "tab_window"
+            visible: settings_tab == "window"
             color: "green"
             anchors.fill: parent
 

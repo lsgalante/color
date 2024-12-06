@@ -1,9 +1,8 @@
 // ColorSlider.qml
 import QtQuick
 
-Rectangle {
+ColorRect {
     id: root
-    color: "black"
     height: parent.height; width: parent.width
     property var idx: -1
     property var val: 0.0

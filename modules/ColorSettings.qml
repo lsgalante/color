@@ -7,19 +7,17 @@ Column {
     spacing: 0
     anchors.fill: parent
 
-    Rectangle {
+    ColorRect {
         id: tabbar
         height: 20; width: parent.width
         Row {
             anchors.fill: parent
 
-            Rectangle {
+            ColorRect {
                 id: tab_format
                 height: parent.height; width: parent.width / 2
-                color: "black";
-                Text {
+                ColorText {
                     anchors.centerIn: parent
-                    color: "white"
                     text: {
                         if (settings_tab == "format") {return "[ format ]";}
                         else {return "format";}
@@ -31,13 +29,11 @@ Column {
                 }
             }
 
-            Rectangle {
+            ColorRect {
                 id: tab_window
                 height: parent.height; width: parent.width / 2
-                color: "black"
-                Text {
+                ColorText {
                     anchors.centerIn: parent
-                    color: "white"
                     text: {
                         if (settings_tab == "window") {return "[ window ]";}
                         else {return "window";}
@@ -57,31 +53,53 @@ Column {
         height: 2; width: parent.width
     }
     
-    Rectangle {
-        height: parent.height - tabbar.height; width: parent.width    
+    ColorRect {
+        id: pages
+        height: parent.height - tabbar.height - divider.height; width: parent.width
 
         ColorFormatContainer {
-          id: page_color_format
-          visible: settings_tab == "format"
+            id: page_color_format
+            visible: settings_tab == "format"
         }
 
-        Rectangle {
-            id: page_window
+        Column {
+            id: option_col
             visible: settings_tab == "window"
-            color: "green"
-            anchors.fill: parent
+            height: parent.height; width: parent.width
 
-            CheckBox {
-                text: "Controls"
-                y: 100
-                checked: true
-                nextCheckState: function() {
-                    if (checkState == Qt.Checked) {
-                        ctl_win.visible = false;
-                        return Qt.Unchecked;
-                    } else {
-                        ctl_win.visible = true;
-                        return Qt.Checked;
+            Row {
+                height: 20; width: parent.width
+                spacing: 1
+                ColorRect {
+                    height: parent.height; width: 100
+                    ColorText {
+                        text: " display shape: "
+                    }
+                }
+                ColorRect {
+                    height: parent.height; width: 50
+                    ColorText {
+                        text: {
+                            if (display_shape == "square") return "[square]"
+                            else return "square"
+                        }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: display_shape = "square"
+                    }
+                }
+                ColorRect {
+                    height: parent.height; width: 45
+                    ColorText {
+                        text: {
+                            if (display_shape == "circle") return "[circle]"
+                            else return "circle"
+                        }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: display_shape = "circle"
                     }
                 }
             }

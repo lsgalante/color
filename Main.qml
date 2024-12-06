@@ -13,6 +13,7 @@ Window {
     color: "blue"
     height: 200; width: 200
     x: 400; y: Screen.height - 200 - 25
+    property string display_shape: "square"
     property string settings_tab: "format"
     property string format_active: "rgb"
     property var ch0: 0.6
@@ -32,8 +33,7 @@ Window {
         ColorControls { 
             height: test.height; width: 100
         }
-        Rectangle {
-            color: "black"
+        ColorRect {
             height: parent.height; width: 200
             x: 100
             ColorSettings { }
